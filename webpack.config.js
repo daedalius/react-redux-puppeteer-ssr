@@ -2,6 +2,9 @@ const { resolve } = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 
 module.exports = {
+  devServer: {
+    historyApiFallback: true
+  },
   entry: './src/main.tsx',
   output: {
     path: resolve('./dist/app')

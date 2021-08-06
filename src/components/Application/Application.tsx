@@ -1,23 +1,29 @@
 /* eslint-disable react/no-unescaped-entities */
-import * as React from 'react';
+import * as React from 'react'
 
-import lennaImageUrl from './lenna.png';
-import './styles.css';
+import './styles.css'
+import { Switch, Route, Link } from 'react-router-dom'
+import { Local } from './routes/Local'
+import { Remote } from './routes/Remote'
 
-export const Application = () : JSX.Element => {
+export const Application = (): JSX.Element => {
   return (
-    <>
-      <h1>Hello!</h1>
-
-      <section>
-        <p>Loading images via "file-loader" in the JSX:</p>
-        <img src={lennaImageUrl} alt="Lenna test image" />
-      </section>
-
-      <section>
-        <p>Loading images via "file-loader" in the CSS:</p>
-        <div className="lenna"></div>
-      </section>
-    </>
-  );
-} ;
+    <div>
+      <div>
+        <Link to="/local">local</Link>
+      </div>
+      <div>
+        <Link to="/remote">remote</Link>
+      </div>
+      <Switch>
+        <Route path="/local">
+          <Local />
+        </Route>
+        <Route path="/remote">
+          <Remote />
+        </Route>
+        <Route path="/" redirectTo="/local" />
+      </Switch>
+    </div>
+  )
+}

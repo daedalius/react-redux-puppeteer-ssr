@@ -1,43 +1,41 @@
-# Just another seed for mine and your React projects 🤗
+# React, Redux, Puppeteer SSR
+Here is a SPA with two routes that shows todo-lists:
+* /local asks for local server
+* /remote asks for JSON-placeholder API
 
-## What is in the box? 📦
+That SPA was SSR-ed via Puppeteer:
+- When user go to 4000 port, NodeJS opens Puppeteer and opens the SPA inside of it
+- After all requests are made NodeJS calls (on the page in puppeteer) the Redux store serialization into an element with [data-redux-store-state] attribute
+- NodeJS receives the final HTML and sends it to the client
+- Before hydration, client tries to prefill redux-state from the element with [data-redux-store-state] attribute
 
-- Not a Solid🐍 or a 💎🐕
-- React 17
-- Typescript
-- Webpack 5
-- Storybook 6
-- Cypress 7
-- Jest 27
-- React Testing Library
+> All important parts are reflected in comments with [SSR] tag
 
-✅ Storybook and Cypress run on the Webpack config provided.
+# What to notice
+## SPA
+* Visit http://localhost:8080/local
+* Notice no HTML present in initial document
+* Notice first call for /local todos (http://127.0.0.1:4001/)
 
-## Misc and tweaks
-
-- Some Prettier config
-- Some ESLint config
-- Some image loading
-- Some Storybook helper functions to easily describe Stories in CSF-format
-- Changed Storybook Docs global render (you may remove "docs" section from "parameters" in ./storybook/preview.js file)
-- Two tsconfigs to avoid [Cypress/Jest typings collision](https://github.com/cypress-io/cypress-and-jest-typescript-example)
-- 🐳 Some Docker and Docker Compose configs
-
+## SSR
+* Visit http://localhost:4000/local
+* Notice HTML is present in initial document
+* Notice Redux State is present in initial document (serialized in one of the \<body> children)
+* Notice there is no network call for /local todos (like http://127.0.0.1:4001/)
 ## NPM commands
 
 | npm run ...                | Description                                                            |
 | ---------------------------| ---------------------------------------------------------------------- |
-| start                      | Starts an App, visits local URL                                        |
-| run:docker-compose         | Starts an App hosted in docker-container (visit http://127.0.0.1:4001) |
-| run:docker-compose:rebuild | The same as above, but builds a containers from scratch                |
-| build                      | Builds an App, puts build in dist/app                                  |
-| test:unit                  | Runs simple js and js-dom based unit-tests                             |
-| test:unit:watch            | The same as above, but for new (uncommitted) unit-test                 |
-| test:components:browser    | Runs component tests in the browser via Cypress                        |
-| test:components:ci         | The same as above, but browser is headless and records video           |
+| start                      | (required) Starts an SPA App (it also will be visited by puppeteer)    |
+| ssr:start                  | (required) Starts SSR-server on port 4000, also serves static files    |
+| local-server:start         | (required) Starts NodeJS server to answer on /local todos requests     |
+| build                      | (required) Builds an App, puts build in dist/app                       |
+
+## Test commands
+
+| npm run ...                | Description                                                            |
+| ---------------------------| ---------------------------------------------------------------------- |
 | test:e2e:browser           | Runs e2e tests in the browser via Cypress                              |
 | test:e2e:ci                | The same as above, but browser is headless and records video           |
 | cypress                    | Opens Cypress UI for e2e tests                                         |
-| cypress-ct                 | Opens Cypress UI for component tests                                   |
-| storybook                  | Runs Storybook                                                         |
-| build-storybook            | Builds Storybook, puts build in dist/storybook                         |
+
